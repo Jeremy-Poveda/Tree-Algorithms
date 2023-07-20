@@ -1,4 +1,4 @@
-package arboles;
+package trees;
 
 public class BinaryTreeNode<E> {
     private E content;
