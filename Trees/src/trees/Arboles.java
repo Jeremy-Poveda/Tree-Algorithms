@@ -52,7 +52,8 @@ public class Arboles {
         tree2.setLeft(new BinaryTree<>(2));
         tree2.setRigth(new BinaryTree<>(3));
         
-        
-        System.out.println("Intercepcion arbol (Recursivo): "+tree1.findInterception(tree2).returnPreOrderListRecursive());
+        System.out.println("Intercepcion arbol (Recursivo): "+tree1.findInterceptionRecursive(tree2).returnPreOrderListRecursive());
+        System.out.println("Intercepcion arbol (Iterativo): "+tree1.findInterceptionIterative(tree2).returnPreOrderListRecursive());
+
     }
 }

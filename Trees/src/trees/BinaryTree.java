@@ -365,7 +365,7 @@ public class BinaryTree<E> {
         int rightHeight = this.root.getRight().getHeightIterative();
         return (Math.abs(leftHeight - rightHeight) <= 1);
     }
-    public BinaryTree<E> findInterception(BinaryTree<E> otherBinaryTree){
+    public BinaryTree<E> findInterceptionRecursive(BinaryTree<E> otherBinaryTree){
         BinaryTree<E> interceptionTree = new BinaryTree<>();
         if(!this.isEmpty() && !otherBinaryTree.isEmpty()){
             try{
@@ -377,11 +377,58 @@ public class BinaryTree<E> {
                 System.out.println("Esta operacion solo es valida para arboles binarios de tipo numerico.");
             }
             if(this.root.getLeft()!= null && otherBinaryTree.root.getLeft()!= null){
-                interceptionTree.setLeft(this.root.getLeft().findInterception(otherBinaryTree.root.getLeft()));
+                interceptionTree.setLeft(this.root.getLeft().findInterceptionRecursive(otherBinaryTree.root.getLeft()));
             }
             
             if(this.root.getRight()!= null && otherBinaryTree.root.getRight()!= null){
-                interceptionTree.setRigth(this.root.getRight().findInterception(otherBinaryTree.root.getRight()));
+                interceptionTree.setRigth(this.root.getRight().findInterceptionRecursive(otherBinaryTree.root.getRight()));
+            }
+        }
+        return interceptionTree;
+    }
+    
+      public BinaryTree<E> findInterceptionIterative(BinaryTree<E> otherBinaryTree){
+        BinaryTree<E> interceptionTree = new BinaryTree<>();
+        if(!this.isEmpty() && !otherBinaryTree.isEmpty()){
+            Stack<BinaryTree<E>> s1 = new Stack<>();
+            Stack<BinaryTree<E>> s2 = new Stack<>();
+            try{
+                int result = (int) this.getRoot() + (int) otherBinaryTree.getRoot();
+                BinaryTreeNode<E> resultBinaryTreeNode = new BinaryTreeNode(result);
+                interceptionTree.root = resultBinaryTreeNode;
+                
+            } catch (NumberFormatException e){
+                System.out.println("Esta operacion solo es valida para arboles binarios de tipo numerico.");
+            }
+            s1.push(this);
+            s2.push(otherBinaryTree);
+            while(!s1.isEmpty() && !s2.isEmpty()){
+                BinaryTree<E> actualBinaryTree = s1.pop();
+                BinaryTree<E> actualOtherBinaryTree = s2.pop();
+                if(actualBinaryTree.root.getLeft() != null && actualOtherBinaryTree.root.getLeft() != null){
+                    try{
+                        int result = (int) actualBinaryTree.root.getLeft().getRoot() + (int) actualOtherBinaryTree.root.getLeft().getRoot();
+                        BinaryTree<E> resultBinaryTreeNode = new BinaryTree(result);
+                        interceptionTree.setLeft(resultBinaryTreeNode);
+
+                    } catch (NumberFormatException e){
+                        System.out.println("Esta operacion solo es valida para arboles binarios de tipo numerico.");
+                    }
+                    s1.push(actualBinaryTree.root.getLeft());
+                    s2.push(actualOtherBinaryTree.root.getLeft());
+                }
+                if(actualBinaryTree.root.getRight() != null && actualOtherBinaryTree.root.getRight() != null){
+                    try{
+                        int result = (int) actualBinaryTree.root.getRight().getRoot() + (int) actualOtherBinaryTree.root.getRight().getRoot();
+                        BinaryTree<E> resultBinaryTreeNode = new BinaryTree(result);
+                        interceptionTree.setRigth(resultBinaryTreeNode);
+
+                    } catch (NumberFormatException e){
+                        System.out.println("Esta operacion solo es valida para arboles binarios de tipo numerico.");
+                    }
+                    s1.push(actualBinaryTree.root.getRight());
+                    s2.push(actualOtherBinaryTree.root.getRight());
+                }
             }
         }
         return interceptionTree;
