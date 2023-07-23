@@ -373,7 +373,7 @@ public class BinaryTree<E> {
                 BinaryTreeNode<E> resultBinaryTreeNode = new BinaryTreeNode(result);
                 interceptionTree.root = resultBinaryTreeNode;
                 
-            } catch (NumberFormatException e){
+            } catch (ClassCastException e){
                 System.out.println("Esta operacion solo es valida para arboles binarios de tipo numerico.");
             }
             if(this.root.getLeft()!= null && otherBinaryTree.root.getLeft()!= null){
@@ -397,7 +397,7 @@ public class BinaryTree<E> {
                 BinaryTreeNode<E> resultBinaryTreeNode = new BinaryTreeNode(result);
                 interceptionTree.root = resultBinaryTreeNode;
                 
-            } catch (NumberFormatException e){
+            } catch (ClassCastException e){
                 System.out.println("Esta operacion solo es valida para arboles binarios de tipo numerico.");
             }
             s1.push(this);
@@ -411,7 +411,7 @@ public class BinaryTree<E> {
                         BinaryTree<E> resultBinaryTreeNode = new BinaryTree(result);
                         interceptionTree.setLeft(resultBinaryTreeNode);
 
-                    } catch (NumberFormatException e){
+                    } catch (ClassCastException e){
                         System.out.println("Esta operacion solo es valida para arboles binarios de tipo numerico.");
                     }
                     s1.push(actualBinaryTree.root.getLeft());
@@ -432,5 +432,97 @@ public class BinaryTree<E> {
             }
         }
         return interceptionTree;
+    }
+      
+    public int countDescendantsRecursive(){
+        int countDescendents = 0;
+        if(!this.isEmpty()){
+            if(this.root.getLeft() != null){
+                countDescendents++;
+                countDescendents += this.root.getLeft().countDescendantsRecursive();
+            }
+            if(this.root.getRight() != null){
+                countDescendents++;
+                countDescendents += this.root.getRight().countDescendantsRecursive();
+            }
+        }
+        return countDescendents;
+    }
+    
+    public int countDescendantsIterative(){
+        int countDescendents = 0;
+        if(!this.isEmpty()){
+            Stack<BinaryTree<E>> s = new Stack<>();
+            s.push(this);
+            while(!s.isEmpty()){
+                BinaryTree<E> actualBinaryTree = s.pop();
+                if(actualBinaryTree.root.getLeft() != null){
+                    countDescendents++;
+                    s.push(actualBinaryTree.root.getLeft());
+                }
+                if(actualBinaryTree.root.getRight() != null){
+                    countDescendents++;
+                    s.push(actualBinaryTree.root.getRight());
+                }
+            }
+        }
+        return countDescendents;
+    }
+    
+    public boolean isIdenticalRecursive(BinaryTree<E> otherBinaryTree){
+        boolean isIdentical = false;
+        if(otherBinaryTree == null){
+            return false;
+        }
+        if(!this.isEmpty() && !otherBinaryTree.isEmpty()){ 
+            if(this.getRoot().equals(otherBinaryTree.getRoot())){
+                isIdentical = true;
+                if((this.root.getLeft() == null && otherBinaryTree.root.getLeft() != null) || (this.root.getLeft() != null && otherBinaryTree.root.getLeft() == null)){
+                    isIdentical = false; // Si uno de los dos no existe
+                } else {
+                    if(this.root.getLeft() != null && otherBinaryTree.root.getLeft() != null){
+                        return isIdentical && this.root.getLeft().isIdenticalRecursive(otherBinaryTree.root.getLeft());
+                    }
+                }
+                if((this.root.getRight() == null && otherBinaryTree.root.getRight() != null) || (this.root.getRight() != null && otherBinaryTree.root.getRight() == null)){
+                    isIdentical = false; // Si uno de los dos no existe
+                } else {
+                    if(this.root.getRight() != null && otherBinaryTree.root.getRight() != null){
+                        return isIdentical && this.root.getRight().isIdenticalRecursive(otherBinaryTree.root.getRight());
+                    }
+                }
+            } else {
+                return false;
+            }
+        } else if(this.isEmpty() && otherBinaryTree.isEmpty()){
+            return true; // Dos arboles vacios seran identicos.
+        }
+        return isIdentical;
+    }
+    
+    public boolean isIdenticalIterative(BinaryTree<E> otherBinaryTree){
+        boolean isIdentical = false;
+        if(otherBinaryTree == null){
+            return false;
+        }
+        if(this.isEmpty() && otherBinaryTree.isEmpty()){
+            return true; // Dos arboles vacios seran identicos.
+        }
+        if(!this.isEmpty() && !otherBinaryTree.isEmpty()){
+            Stack<BinaryTree<E>> s1 = new Stack<>();
+            Stack<BinaryTree<E>> s2 = new Stack<>();
+            s1.push(this);
+            s2.push(otherBinaryTree);
+            while(!s1.isEmpty() && !s2.isEmpty()){
+                BinaryTree<E> actualBinaryTree = s1.pop();
+                BinaryTree<E> actualOtherBinaryTree = s2.pop();
+                if(actualBinaryTree.getRoot().equals(actualOtherBinaryTree.getRoot())){
+                    
+                }
+            }
+        }
+            
+        
+        return isIdentical;
     }
 }

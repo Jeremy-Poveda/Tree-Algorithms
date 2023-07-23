@@ -1,8 +1,6 @@
 
 package trees;
 
-import java.util.LinkedList;
-
 public class Arboles {
 
     public static void main(String[] args) {
@@ -44,16 +42,20 @@ public class Arboles {
         System.out.println("Si el arbol esta balanceado en altura (Recursivo): "+ a.isHeightBalancedRecursive());
         System.out.println("Si el arbol esta balanceado en altura (Iterativo): "+ a.isHeightBalancedIterative());
         
+        System.out.println("Cantidad de descendientes (Recursivo): "+a.countDescendantsRecursive());
+        System.out.println("Cantidad de descendientes (Iterativo): "+a.countDescendantsIterative());
+        
         BinaryTree<Integer> tree1 = new BinaryTree<>(1);
         tree1.setLeft(new BinaryTree<>(2));
-        tree1.setRigth(new BinaryTree<>(3));
+        tree1.setRigth(new BinaryTree<>(4));
         
-         BinaryTree<Integer> tree2 = new BinaryTree<>(1);
+        BinaryTree<Integer> tree2 = new BinaryTree<>(1);
         tree2.setLeft(new BinaryTree<>(2));
         tree2.setRigth(new BinaryTree<>(3));
         
         System.out.println("Intercepcion arbol (Recursivo): "+tree1.findInterceptionRecursive(tree2).returnPreOrderListRecursive());
         System.out.println("Intercepcion arbol (Iterativo): "+tree1.findInterceptionIterative(tree2).returnPreOrderListRecursive());
-
+        
+        System.out.println("Son identicos (Recursivo): "+a.isIdenticalRecursive(a));
     }
 }
