@@ -1,6 +1,7 @@
 package trees;
 
 import java.util.ArrayDeque;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -33,7 +34,7 @@ public class BinaryTree<E> {
         this.root.setLeft(leftBinaryTree);
     }
    
-    public void setRigth(BinaryTree<E> rightBinaryTree){
+    public void setRight(BinaryTree<E> rightBinaryTree){
         this.root.setRight(rightBinaryTree);
     }
    
@@ -350,10 +351,18 @@ public class BinaryTree<E> {
         if(this.isLeaf()){
             return true;
         }
-        int leftHeight = this.root.getLeft().getHeightRecursive();
-        int rightHeight = this.root.getRight().getHeightRecursive();
+        int leftHeight = 0; 
+        if(this.root.getLeft() != null){
+            leftHeight = this.root.getLeft().getHeightRecursive();
+        }
+        int rightHeight = 0; 
+        if(this.root.getRight() != null){
+            rightHeight = this.root.getRight().getHeightRecursive();
+        }
+        
         return (Math.abs(leftHeight - rightHeight) <= 1);
     }
+    
     public boolean isHeightBalancedIterative(){
         if(this.isEmpty()){
             return true;
@@ -361,10 +370,18 @@ public class BinaryTree<E> {
         if(this.isLeaf()){
             return true;
         }
-        int leftHeight = this.root.getLeft().getHeightIterative();
-        int rightHeight = this.root.getRight().getHeightIterative();
+        int leftHeight = 0; 
+        if(this.root.getLeft() != null){
+            leftHeight = this.root.getLeft().getHeightIterative();
+        }
+        int rightHeight = 0; 
+        if(this.root.getRight() != null){
+            rightHeight = this.root.getRight().getHeightIterative();
+        }
         return (Math.abs(leftHeight - rightHeight) <= 1);
     }
+    
+    
     public BinaryTree<E> findInterceptionRecursive(BinaryTree<E> otherBinaryTree){
         BinaryTree<E> interceptionTree = new BinaryTree<>();
         if(!this.isEmpty() && !otherBinaryTree.isEmpty()){
@@ -381,7 +398,7 @@ public class BinaryTree<E> {
             }
             
             if(this.root.getRight()!= null && otherBinaryTree.root.getRight()!= null){
-                interceptionTree.setRigth(this.root.getRight().findInterceptionRecursive(otherBinaryTree.root.getRight()));
+                interceptionTree.setRight(this.root.getRight().findInterceptionRecursive(otherBinaryTree.root.getRight()));
             }
         }
         return interceptionTree;
@@ -421,7 +438,7 @@ public class BinaryTree<E> {
                     try{
                         int result = (int) actualBinaryTree.root.getRight().getRoot() + (int) actualOtherBinaryTree.root.getRight().getRoot();
                         BinaryTree<E> resultBinaryTreeNode = new BinaryTree(result);
-                        interceptionTree.setRigth(resultBinaryTreeNode);
+                        interceptionTree.setRight(resultBinaryTreeNode);
 
                     } catch (NumberFormatException e){
                         System.out.println("Esta operacion solo es valida para arboles binarios de tipo numerico.");
@@ -517,12 +534,137 @@ public class BinaryTree<E> {
                 BinaryTree<E> actualBinaryTree = s1.pop();
                 BinaryTree<E> actualOtherBinaryTree = s2.pop();
                 if(actualBinaryTree.getRoot().equals(actualOtherBinaryTree.getRoot())){
-                    
+                    isIdentical = true;
+                    if((actualBinaryTree.root.getLeft() == null && actualOtherBinaryTree.root.getLeft() != null) || (actualBinaryTree.root.getLeft() != null && actualOtherBinaryTree.root.getLeft() == null)){ // Si solo existe una izquierda
+                        return false;
+                    } else {
+                        if(actualBinaryTree.root.getLeft() != null && actualOtherBinaryTree.root.getLeft() != null){
+                            s1.push(actualBinaryTree.root.getLeft());
+                            s2.push(actualOtherBinaryTree.root.getLeft());
+                        }
+                    }
+                    if((actualBinaryTree.root.getRight() == null && actualOtherBinaryTree.root.getRight() != null) || (actualBinaryTree.root.getRight() != null && actualOtherBinaryTree.root.getRight() == null)){ // Si solo existe una derecha
+                        return false;
+                    } else {
+                        if(actualBinaryTree.root.getRight() != null && actualOtherBinaryTree.root.getRight() != null){
+                            s1.push(actualBinaryTree.root.getRight());
+                            s2.push(actualOtherBinaryTree.root.getRight());
+                        }
+                    }
+                } else {
+                    return false;
                 }
             }
         }
-            
-        
         return isIdentical;
+    }
+    public BinaryTreeNode<E> findParentRecursive(BinaryTreeNode<E> BTnode, Comparator cmp){
+        BinaryTreeNode<E> result = null;
+        if(!this.isEmpty()){
+            BinaryTreeNode<E> leftParent = null;
+            BinaryTreeNode<E> rightParent = null;
+            //Se recorrera en profundidad
+            if(this.root.getLeft()!= null){
+                if(cmp.compare(this.root.getLeft().root, BTnode) == 0){ // Si el nodo de la izquierda es el que le enviamos
+                    return this.root;
+                } 
+                leftParent = this.root.getLeft().findParentRecursive(BTnode, cmp);
+            }
+            if(this.root.getRight()!= null){
+                if(cmp.compare(this.root.getRight().root, BTnode) == 0){ // Si el nodo de la derecha es el que le enviamos
+                    return this.root;
+                }
+                rightParent = this.root.getRight().findParentRecursive(BTnode, cmp);
+            }
+            if(leftParent != null){
+                result = leftParent;
+            } else if (rightParent != null) {
+                result = rightParent;
+            } 
+        }
+        return result;
+    }
+    public BinaryTreeNode<E> findParentIterative(BinaryTreeNode<E> BTNode, Comparator cmp){
+        BinaryTreeNode<E> result = null;
+        if(!this.isEmpty()){
+            Stack<BinaryTree<E>> s = new Stack<>();
+            s.push(this);
+            while(!s.isEmpty()){
+                BinaryTree<E> actualBinaryTree = s.pop();
+                if(actualBinaryTree.root.getLeft() != null){
+                    if(cmp.compare(actualBinaryTree.root.getLeft().root, BTNode) == 0){
+                        return actualBinaryTree.root;
+                    } else {
+                        s.push(actualBinaryTree.root.getLeft());
+                    }
+                }
+                if(actualBinaryTree.root.getRight() != null){
+                    if(cmp.compare(actualBinaryTree.root.getRight().root, BTNode) == 0){
+                        return actualBinaryTree.root;
+                    } else {
+                        s.push(actualBinaryTree.root.getRight());
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    public boolean isLeftyRecursive(){
+        int leftDescendants = -1;
+        int rightDescendants = -1;
+
+        if(this.isEmpty() || this.isLeaf()){
+            return true;
+        }
+        boolean isLeftyLeft;
+        boolean isLeftyRight;
+        if(this.root.getLeft() != null){
+            leftDescendants = this.root.getLeft().countDescendantsRecursive();
+            isLeftyLeft = this.root.getLeft().isLeftyRecursive();
+        } else {
+            isLeftyLeft = true; // Ya que no existe un nodo a la izquierda.
+        }
+        if(this.root.getRight() != null){
+            rightDescendants = this.root.getRight().countDescendantsRecursive();
+            isLeftyRight = this.root.getRight().isLeftyRecursive();
+        } else {
+            isLeftyRight = true; // Ya que no existe un nodo a la derecha.
+        }
+//        System.out.println("Nodo actual: "+this.getRoot());
+//        System.out.println(leftDescendants + " > " + rightDescendants);
+//        System.out.println("Izquierda :"+isLeftyLeft);
+//        System.out.println("Derecha :"+isLeftyRight);
+        return (leftDescendants > rightDescendants) && (isLeftyLeft && isLeftyRight);
+    }
+    public boolean isLeftyIterative(){
+        boolean isLefty;
+        if(this.isEmpty() || this.isLeaf()){
+            return true;
+        } else {
+            Stack<BinaryTree<E>> s = new Stack<>();
+            s.push(this);
+            isLefty = true;
+            while(!s.isEmpty()){
+                BinaryTree<E> actualBinaryTree = s.pop();
+                int leftDescendants = -1;
+                int rightDescendants = -1;
+                if(actualBinaryTree.isEmpty() || actualBinaryTree.isLeaf()){
+                    isLefty = isLefty && true;
+                } else {
+                    if(actualBinaryTree.root.getLeft() != null){
+                        leftDescendants = actualBinaryTree.root.getLeft().countDescendantsIterative();
+                        s.push(actualBinaryTree.root.getLeft());
+                    }
+                    if(actualBinaryTree.root.getRight() != null){
+                        rightDescendants = actualBinaryTree.root.getRight().countDescendantsIterative();
+                        s.push(actualBinaryTree.root.getRight());
+                    }
+//                    System.out.println("Nodo actual: "+actualBinaryTree.getRoot());
+//                    System.out.println(leftDescendants + " > " + rightDescendants);
+                    isLefty = isLefty && (leftDescendants > rightDescendants);
+                }
+            }
+        }
+        return isLefty;
     }
 }

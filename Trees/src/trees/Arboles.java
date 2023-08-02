@@ -1,5 +1,6 @@
-
 package trees;
+
+import java.util.Comparator;
 
 public class Arboles {
 
@@ -8,15 +9,15 @@ public class Arboles {
         BinaryTree<String> b = new BinaryTree<>("B");
         BinaryTree<String> c = new BinaryTree<>("C");
         a.setLeft(b);
-        a.setRigth(c);
+        a.setRight(c);
         BinaryTree<String> d = new BinaryTree<>("D");
         BinaryTree<String> e = new BinaryTree<>("E");
         b.setLeft(d);
-        b.setRigth(e);
+        b.setRight(e);
         BinaryTree<String> f = new BinaryTree<>("F");
         BinaryTree<String> g = new BinaryTree<>("G");
         d.setLeft(f);
-        d.setRigth(g);
+        d.setRight(g);
         System.out.println("PreOrder (Resursivo): "+a.returnPreOrderListRecursive());
         System.out.println("InOrder (Resursivo): "+a.returnInOrderListRecursive());
         System.out.println("PostOrder (Resursivo): "+a.returnPostOrderListRecursive());
@@ -47,15 +48,27 @@ public class Arboles {
         
         BinaryTree<Integer> tree1 = new BinaryTree<>(1);
         tree1.setLeft(new BinaryTree<>(2));
-        tree1.setRigth(new BinaryTree<>(4));
+        tree1.setRight(new BinaryTree<>(4));
         
         BinaryTree<Integer> tree2 = new BinaryTree<>(1);
         tree2.setLeft(new BinaryTree<>(2));
-        tree2.setRigth(new BinaryTree<>(3));
+        tree2.setRight(new BinaryTree<>(3));
         
         System.out.println("Intercepcion arbol (Recursivo): "+tree1.findInterceptionRecursive(tree2).returnPreOrderListRecursive());
         System.out.println("Intercepcion arbol (Iterativo): "+tree1.findInterceptionIterative(tree2).returnPreOrderListRecursive());
         
         System.out.println("Son identicos (Recursivo): "+a.isIdenticalRecursive(a));
+        System.out.println("Son identicos(Iterativo): "+a.isIdenticalIterative(a));
+        
+        BinaryTreeNode<String> BTnode = new BinaryTreeNode<>("F");
+        Comparator<BinaryTreeNode<String>> cmp = (BinaryTreeNode<String> o1, BinaryTreeNode<String> o2) -> o1.getContent().compareTo(o2.getContent());
+        
+        System.out.println("Encontrando padre de nodo (Recursivo): "+a.findParentRecursive(BTnode, cmp));
+        System.out.println("Encontrando padre de nodo (Iterativo): "+a.findParentIterative(BTnode, cmp));
+        
+        System.out.println("El arbol es zurdo (Recursivo): "+a.isLeftyRecursive());
+        System.out.println("El arbol es zurdo (Iterativo): "+a.isLeftyIterative());
+        
+        
     }
 }

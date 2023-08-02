@@ -19,19 +19,23 @@ public class BinaryTreeNode<E> {
         this.content = content;
     }
 
-    public BinaryTree getLeft() {
+    public BinaryTree<E> getLeft() {
         return this.left;
     }
 
-    public void setLeft(BinaryTree left) {
+    public void setLeft(BinaryTree<E> left) {
         this.left = left;
     }
 
-    public BinaryTree getRight() {
+    public BinaryTree<E> getRight() {
         return this.right;
     }
 
-    public void setRight(BinaryTree right) {
+    public void setRight(BinaryTree<E> right) {
         this.right = right;
+    }
+    @Override
+    public String toString(){
+        return "{Nodo Arbol Binario | Contenido "+this.content+"}";
     }
 }
